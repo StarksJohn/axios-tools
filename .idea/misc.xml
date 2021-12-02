@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JavaScriptSettings">
+    <option name="languageLevel" value="JSX" />
+  </component>
+  <component name="RTProjectComponent">
+    <option name="nodeInterpreter" value="/usr/local/bin/node" />
+    <option name="pluginEnabled" value="true" />
+    <option name="reactNative" value="true" />
+  </component>
+</project>
