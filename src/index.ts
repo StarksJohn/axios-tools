@@ -14,6 +14,69 @@ const defaultheaders = {
     'X-Requested-With': 'XMLHttpRequest'
 }
 
+/**
+ * Request interceptor
+ * @param config: Pass as a parameter of api.get() | api.post() method
+ */
+const handleRequestConfig = (config: AxiosRequestConfig) => {
+    console.log('axios-tools handleRequestConfig config=', config)
+    // Recursively delete empty objects, empty arrays, empty strings, null and value values from the object. Do not change the original data。
+    const Config = cleanDeep(config, {
+        emptyArrays: false,
+        emptyObjects: false,
+        emptyStrings: false// Whether to clear empty strings
+    })
+    if (Config.method === 'get') {
+        Config.paramsSerializer = params => {
+            console.log('axios-tools paramsSerializer params=', params)
+            // A querystring parsing and stringifying library with some added security.
+            const qsStr = qs.stringify(params, {
+                arrayFormat: 'repeat'
+            })
+            console.log('axios-tools paramsSerializer qsStr=', qsStr)
+            return qsStr
+        }
+    }
+
+    // Config.headers.Authorization = userModel.access_token // Add token to each request
+    // Config.headers.Origin = Config.url
+    // Config.headers['Content-Type'] = 'application/json;'
+    // Config.headers = { ...defaultheaders, ...Config.headers }
+    console.log('axios-tools interceptors.request config=', Config)
+    return Config
+}
+
+/**
+ * Response interceptor
+ * Execution earlier than checkStatus method
+ * @param response
+ */
+// @ts-ignore
+const handleResponseSuccess = (response: { data: { code: number ,msg:string}, status: number }) => {
+    console.log('axios-tools handleResponseSuccess response=', response)
+    if (response.status !== 200) { // api request failed, based on actual situation
+        // eslint-disable-next-line prefer-promise-reject-errors
+        return Promise.reject(`axios-tools response.status !== 200 status=${response.status}`)// 接口Promise返回错误状态
+    }
+        // else if (response.data?.code) {
+        //     switch (response.data.code) {
+        //         case 200:
+        //             return
+        //         case 401:// User token is invalid
+        //             // eslint-disable-next-line prefer-promise-reject-errors
+        //             return Promise.reject('401')
+        //         case 403:
+        //             // How to deal with token expiration
+        //             break
+        //         default:
+        //         // message.error(response.data.msg)
+        //     }
+    // }
+    else {
+        return Promise.resolve(response.data)
+    }
+}
+
 class Api {
     instance: AxiosInstance
 
@@ -97,69 +160,6 @@ const post = (props: axiosToolsProps) => {
             console.log('axios-tools post error=', error)
             return Promise.reject(error)
         })
-}
-
-/**
- * Request interceptor
- * @param config: Pass as a parameter of api.get() | api.post() method
- */
-const handleRequestConfig = (config: AxiosRequestConfig) => {
-    console.log('axios-tools handleRequestConfig config=', config)
-    // Recursively delete empty objects, empty arrays, empty strings, null and value values from the object. Do not change the original data。
-    const Config = cleanDeep(config, {
-        emptyArrays: false,
-        emptyObjects: false,
-        emptyStrings: false// Whether to clear empty strings
-    })
-    if (Config.method === 'get') {
-        Config.paramsSerializer = params => {
-            console.log('axios-tools paramsSerializer params=', params)
-            // A querystring parsing and stringifying library with some added security.
-            const qsStr = qs.stringify(params, {
-                arrayFormat: 'repeat'
-            })
-            console.log('axios-tools paramsSerializer qsStr=', qsStr)
-            return qsStr
-        }
-    }
-
-    // Config.headers.Authorization = userModel.access_token // Add token to each request
-    // Config.headers.Origin = Config.url
-    // Config.headers['Content-Type'] = 'application/json;'
-    // Config.headers = { ...defaultheaders, ...Config.headers }
-    console.log('axios-tools interceptors.request config=', Config)
-    return Config
-}
-
-/**
- * Response interceptor
- * Execution earlier than checkStatus method
- * @param response
- */
-// @ts-ignore
-const handleResponseSuccess = (response: { data: { code: number ,msg:string}, status: number }) => {
-    console.log('axios-tools handleResponseSuccess response=', response)
-    if (response.status !== 200) { // api request failed, based on actual situation
-        // eslint-disable-next-line prefer-promise-reject-errors
-        return Promise.reject(`axios-tools response.status !== 200 status=${response.status}`)// 接口Promise返回错误状态
-    }
-    // else if (response.data?.code) {
-    //     switch (response.data.code) {
-    //         case 200:
-    //             return
-    //         case 401:// User token is invalid
-    //             // eslint-disable-next-line prefer-promise-reject-errors
-    //             return Promise.reject('401')
-    //         case 403:
-    //             // How to deal with token expiration
-    //             break
-    //         default:
-    //         // message.error(response.data.msg)
-    //     }
-    // }
-    else {
-        return Promise.resolve(response.data)
-    }
 }
 
 const handleResponseFail = (err: { response: { status: any }; message: string }) => {
