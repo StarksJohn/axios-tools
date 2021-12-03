@@ -210,7 +210,7 @@ const checkStatus = (response: AxiosResponse) => {
         console.log('axios-tools checkStatus response=', response)
         const {code, data}: axiosToolsResponse = response.data
         console.log('axios-tools checkStatus code=',code,' data=',data)
-        if (response && code !== 0) {
+        if (response && code === 0) {
             resolve(data)
         } else { // Network exception
             // eslint-disable-next-line prefer-promise-reject-errors
