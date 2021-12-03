@@ -112,7 +112,7 @@ const get = (props: axiosToolsProps) => {
 
     //After api.get() is executed, the callback of the handleRequestConfig method will be triggered
     return api.get(url, {
-        params: params,
+        params: params,baseURL,
         headers,
         validateStatus: validateStatus
     }).then((res) => {
