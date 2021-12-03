@@ -208,13 +208,14 @@ const handleResponseFail = (err: { response: { status: any }; message: string })
 const checkStatus = (response: AxiosResponse) => {
     return new Promise((resolve, reject) => {
         console.log('axios-tools checkStatus response=', response)
-        const {code, data}: axiosToolsResponse = response.data
+        const {code, data,msg=''}: axiosToolsResponse = response.data
         console.log('axios-tools checkStatus code=',code,' data=',data)
         if (response && code === 0) {
             resolve(data)
         } else { // Network exception
             // eslint-disable-next-line prefer-promise-reject-errors
-            reject(`axios-tools checkStatus response.code!==0 response=${response}`)
+            console.log(`axios-tools checkStatus response.code!==0 response=${response}`)
+            reject({code,msg})
         }
     })
 }
