@@ -8,10 +8,15 @@ const defaultheaders = {
     'Content-Type': 'application/json;',
     /**
      * https://blog.csdn.net/HeatDeath/article/details/79168614
-     * 表示此项目的所有请求都是 Ajax 异步http请求,如果没有此参数,表示请求是传统的同步HTTP请求
      * Indicates that all requests for this project are Ajax asynchronous http requests. If there is no such parameter, it means    that the request is a traditional synchronous HTTP request.
      */
     'X-Requested-With': 'XMLHttpRequest'
+}
+
+interface axiosToolsResponse {
+    code: number,
+    data: {},
+    msg?: string
 }
 
 /**
@@ -38,10 +43,6 @@ const handleRequestConfig = (config: AxiosRequestConfig) => {
         }
     }
 
-    // Config.headers.Authorization = userModel.access_token // Add token to each request
-    // Config.headers.Origin = Config.url
-    // Config.headers['Content-Type'] = 'application/json;'
-    // Config.headers = { ...defaultheaders, ...Config.headers }
     console.log('axios-tools interceptors.request config=', Config)
     return Config
 }
@@ -52,28 +53,13 @@ const handleRequestConfig = (config: AxiosRequestConfig) => {
  * @param response
  */
 // @ts-ignore
-const handleResponseSuccess = (response: { data: { code: number ,msg:string}, status: number }) => {
+const handleResponseSuccess = (response: { data: axiosToolsResponse, status: number }) => {
     console.log('axios-tools handleResponseSuccess response=', response)
     if (response.status !== 200) { // api request failed, based on actual situation
         // eslint-disable-next-line prefer-promise-reject-errors
         return Promise.reject(`axios-tools response.status !== 200 status=${response.status}`)// 接口Promise返回错误状态
-    }
-        // else if (response.data?.code) {
-        //     switch (response.data.code) {
-        //         case 200:
-        //             return
-        //         case 401:// User token is invalid
-        //             // eslint-disable-next-line prefer-promise-reject-errors
-        //             return Promise.reject('401')
-        //         case 403:
-        //             // How to deal with token expiration
-        //             break
-        //         default:
-        //         // message.error(response.data.msg)
-        //     }
-    // }
-    else {
-        return Promise.resolve(response.data)
+    } else {
+        return Promise.resolve(response)//then checkStatus callback
     }
 }
 
@@ -89,7 +75,6 @@ class Api {
                 timeout: 10000,
                 /**
                  * https://www.ruanyifeng.com/blog/2016/04/cors.html
-                 * 当前请求为跨域类型时是否在请求中协带cookie,前端设置true属性后，要通知后端做允许，否则请求失败
                  * When the current request is a cross-domain type, whether to include cookies in the request, after the front-end sets   the true attribute, the back-end must be notified to allow it, otherwise the request will fail
                  */
                 withCredentials: true,
@@ -163,6 +148,7 @@ const post = (props: axiosToolsProps) => {
 }
 
 const handleResponseFail = (err: { response: { status: any }; message: string }) => {
+    console.log('axios-tools handleResponseFail err=', err)
     if (err && axios.isCancel(err)) {
         // requestList.length = 0
         // store.dispatch('changeGlobalState', {loading: false})
@@ -215,21 +201,29 @@ const handleResponseFail = (err: { response: { status: any }; message: string })
     return Promise.reject(err)
 }
 
-const checkStatus = (response: AxiosResponse<any>) => {
+/**
+ * Call back after handleResponseSuccess is executed
+ * @param response
+ */
+const checkStatus = (response: AxiosResponse) => {
     return new Promise((resolve, reject) => {
         console.log('axios-tools checkStatus response=', response)
-        if (response && (response.status === 200 || response.status === 304 || response.status === 400)) {
-            resolve(response.data)
+        const {code, data}: axiosToolsResponse = response.data
+        if (response && code !== 0) {
+            resolve(data)
         } else { // Network exception
             // eslint-disable-next-line prefer-promise-reject-errors
-            reject('axios-tools checkStatus response.status network anomaly')
+            reject(`axios-tools checkStatus response.code!==0 response=${response}`)
         }
     })
 }
 
+/**
+ * Call back after handleRequestConfig is executed
+ * @param status
+ */
 const validateStatus = (status: number) => {
     console.log('axios-tools  validateStatus status=', status)
-
     // Only the return code of 2xx will be returned normally (resolve), and all non-2xx will be treated as exceptions (reject)
     return status >= 200 && status < 300
 }
