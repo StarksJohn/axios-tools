@@ -209,6 +209,7 @@ const checkStatus = (response: AxiosResponse) => {
     return new Promise((resolve, reject) => {
         console.log('axios-tools checkStatus response=', response)
         const {code, data}: axiosToolsResponse = response.data
+        console.log('axios-tools checkStatus code=',code,' data=',data)
         if (response && code !== 0) {
             resolve(data)
         } else { // Network exception
