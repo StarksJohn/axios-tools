@@ -24,7 +24,13 @@ const validateStatus = (status: number) => {
 
 const defaultheaders = {
   // Except for 'multipart/form-data' when uploading files, all others are 'application/json'
-  'Content-Type': 'application/json;'
+  'Content-Type': 'application/json;',
+  /**
+   * https://blog.csdn.net/HeatDeath/article/details/79168614
+   * 表示此项目的所有请求都是 Ajax 异步http请求,如果没有此参数,表示请求是传统的同步HTTP请求
+   * Indicates that all requests for this project are Ajax asynchronous http requests. If there is no such parameter, it means    that the request is a traditional synchronous HTTP request.
+   */
+  'X-Requested-With':'XMLHttpRequest'
 }
 
 /**
@@ -54,7 +60,7 @@ const handleRequestConfig = (config: AxiosRequestConfig) => {
   // Config.headers.Authorization = userModel.access_token // Add token to each request
   // Config.headers.Origin = Config.url
   // Config.headers['Content-Type'] = 'application/json;'
-  Config.headers = { ...defaultheaders, ...Config.headers }
+  // Config.headers = { ...defaultheaders, ...Config.headers }
   console.log('request.ts interceptors.request config=', Config)
   return Config
 }
@@ -150,6 +156,13 @@ class Api {
       this.instance = axios.create({
         baseURL: '',
         timeout: 10000,
+        /**
+         * https://www.ruanyifeng.com/blog/2016/04/cors.html
+         * 当前请求为跨域类型时是否在请求中协带cookie,前端设置true属性后，要通知后端做允许，否则请求失败
+         * When the current request is a cross-domain type, whether to include cookies in the request, after the front-end sets   the true attribute, the back-end must be notified to allow it, otherwise the request will fail
+         */
+        withCredentials:true,
+        headers:defaultheaders,
         ...baseConfig
       })
       // Request interceptor
