@@ -179,7 +179,7 @@ class Api {
 }
 const api: AxiosInstance = new Api().instance
 
-const get = (url: string, params = {}, headers: any) => {
+const get = (url: string, params:any = {}, headers: any={}) => {
   console.log('request.ts get url=', url)
   console.log('request.ts get params=', params)
   console.log('request.ts get headers=', headers)
