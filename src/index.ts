@@ -98,9 +98,9 @@ const api: AxiosInstance = new Api().instance
 
 interface axiosToolsProps {
     url: string;
-    params: {};
-    headers: {};
-    baseURL: string;
+    params?: {};
+    headers?: {};
+    baseURL?: string;
 }
 
 const get = (props: axiosToolsProps) => {
