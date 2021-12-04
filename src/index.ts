@@ -53,13 +53,13 @@ const handleRequestConfig = (config: AxiosRequestConfig) => {
  * @param response
  */
 // @ts-ignore
-const handleResponseSuccess = (response: { data: axiosToolsResponse, status: number }) => {
+const handleResponseSuccess = (response: AxiosResponse/*{ data: axiosToolsResponse, status: number }*/) => {
     console.log('axios-tools handleResponseSuccess response=', response)
     if (response.status !== 200) { // api request failed, based on actual situation
         // eslint-disable-next-line prefer-promise-reject-errors
-        return Promise.reject(`axios-tools response.status !== 200 status=${response.status}`)// 接口Promise返回错误状态
+        return Promise.reject(response/*`axios-tools response.status !== 200 status=${response.status}`*/)// 接口Promise返回错误状态
     } else {
-        return Promise.resolve(response)//then checkStatus callback
+        return Promise.resolve(response.data)//then checkStatus callback
     }
 }
 
@@ -115,12 +115,13 @@ const get = (props: axiosToolsProps) => {
         params: params,baseURL,
         headers,
         validateStatus: validateStatus
-    }).then((res) => {
-        return checkStatus(res)
-    }).catch((error) => {
-        console.log('axios-tools get error=', error)
-        return Promise.reject(error)
     })
+    //     .then((res) => {
+    //     return checkStatus(res)
+    // }).catch((error) => {
+    //     console.log('axios-tools get error=', error)
+    //     return Promise.reject(error)
+    // })
 }
 
 const post = (props: axiosToolsProps) => {
@@ -138,13 +139,13 @@ const post = (props: axiosToolsProps) => {
                 validateStatus: validateStatus, baseURL, headers
             }
         )
-        .then((res) => {
-            return checkStatus(res)
-        })
-        .catch((error) => {
-            console.log('axios-tools post error=', error)
-            return Promise.reject(error)
-        })
+        // .then((res) => {
+        //     return checkStatus(res)
+        // })
+        // .catch((error) => {
+        //     console.log('axios-tools post error=', error)
+        //     return Promise.reject(error)
+        // })
 }
 
 const handleResponseFail = (err: { response: { status: any }; message: string }) => {
@@ -205,20 +206,20 @@ const handleResponseFail = (err: { response: { status: any }; message: string })
  * Call back after handleResponseSuccess is executed
  * @param response
  */
-const checkStatus = (response: AxiosResponse) => {
-    return new Promise((resolve, reject) => {
-        console.log('axios-tools checkStatus response=', response)
-        const {code, data,msg=''}: axiosToolsResponse = response.data
-        console.log('axios-tools checkStatus code=',code,' data=',data)
-        if (response && code === 0) {
-            resolve(data)
-        } else { // Network exception
-            // eslint-disable-next-line prefer-promise-reject-errors
-            console.log(`axios-tools checkStatus response.code!==0 response=${response}`)
-            reject({code,msg})
-        }
-    })
-}
+// const checkStatus = (response: AxiosResponse) => {
+//     return new Promise((resolve, reject) => {
+//         console.log('axios-tools checkStatus response=', response)
+//         const {code, data,msg=''}: axiosToolsResponse = response.data
+//         console.log('axios-tools checkStatus code=',code,' data=',data)
+//         if (response && code === 0) {
+//             resolve(data)
+//         } else { // Network exception
+//             // eslint-disable-next-line prefer-promise-reject-errors
+//             console.log(`axios-tools checkStatus response.code!==0 response=${response}`)
+//             reject({code,msg})
+//         }
+//     })
+// }
 
 /**
  * Call back after handleRequestConfig is executed
@@ -250,5 +251,5 @@ const validateStatus = (status: number) => {
 // }
 
 export {
-    get, post
+    get, post,axiosToolsResponse
 }
