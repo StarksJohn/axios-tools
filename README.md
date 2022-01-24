@@ -16,7 +16,7 @@ Usage:
         import { get,post } from 'axios-tools';
 
 Publish:
-
+        version +1 
         npm login
         npm publish
              note: change the version of your package.json every time before npm publish
