@@ -1,7 +1,7 @@
 import axios, {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios'
 // @ts-ignore
 import qs from 'qs'
-import cleanDeep from 'clean-deep'
+// import cleanDeep from 'clean-deep'
 
 const defaultheaders = {
     // Except for 'multipart/form-data' when uploading files, all others are 'application/json'
@@ -26,11 +26,12 @@ interface axiosToolsResponse {
 const handleRequestConfig = (config: AxiosRequestConfig) => {
     console.log('axios-tools handleRequestConfig config=', config)
     // Recursively delete empty objects, empty arrays, empty strings, null and value values from the object. Do not change the original data。
-    const Config = cleanDeep(config, {
-        emptyArrays: false,
-        emptyObjects: false,
-        emptyStrings: false// Whether to clear empty strings
-    })
+    // const Config = cleanDeep(config, {
+    //     emptyArrays: false,
+    //     emptyObjects: false,
+    //     emptyStrings: false// Whether to clear empty strings
+    // })
+    const Config=config
     if (Config.method === 'get') {
         Config.paramsSerializer = params => {
             console.log('axios-tools paramsSerializer params=', params)
@@ -59,7 +60,7 @@ const handleResponseSuccess = (response: AxiosResponse/*{ data: axiosToolsRespon
         // eslint-disable-next-line prefer-promise-reject-errors
         return Promise.reject(response/*`axios-tools response.status !== 200 status=${response.status}`*/)// 接口Promise返回错误状态
     } else {
-        return Promise.resolve(response.data)//then checkStatus callback
+        return Promise.resolve(response.data)
     }
 }
 
