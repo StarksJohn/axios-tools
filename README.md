@@ -15,8 +15,13 @@ Usage:
 
         import { get,post } from 'axios-tools';
 
+Push:
+
+        git commit -a -s -m ''
+        git push origin main
+
 Publish:
-        version +1 
+        version +1
         npm login
         npm publish
              note: change the version of your package.json every time before npm publish

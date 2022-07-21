@@ -1,5 +1,6 @@
 {
-  "version": "2.0.7",
+  "name": "axios-tools",
+  "version": "2.0.8",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -31,7 +32,6 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "axios-tools",
   "author": "cham1985",
   "module": "dist/axios-tool.esm.js",
   "size-limit": [

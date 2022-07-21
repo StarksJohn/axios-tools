@@ -104,6 +104,10 @@ interface axiosToolsProps {
     baseURL?: string;
 }
 
+/**
+ * use: import { tool } from 'starkfrontendtools';
+ *      const [err, data] = await tool.to(get({ url: '', params: { token: '' }, baseURL: '',   headers: {} }))
+ */
 const get = (props: axiosToolsProps) => {
     const {url = '', params = {}, headers = {}, baseURL = ''} = props
     console.log('axios-tools get url=', url)
@@ -125,6 +129,10 @@ const get = (props: axiosToolsProps) => {
     // })
 }
 
+/**
+ * use: import { tool } from 'starkfrontendtools';
+ *      const [err, data] = await tool.to(post({ url: '', params: { token: '' }, baseURL: '',   headers: {} }))
+ */
 const post = (props: axiosToolsProps) => {
     const {url = '', params = {}, headers = {}, baseURL = ''} = props
     console.log('axios-tools post url=', url)
