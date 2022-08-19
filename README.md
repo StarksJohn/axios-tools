@@ -15,17 +15,11 @@ Usage:
 
         import { get,post } from 'axios-tools';
 
-Push:
+Push and Publish:
 
-        git commit -a -s -m ''
-        git push origin main
-
-Publish:
-        version +1
-        npm login
-        npm publish
-             note: change the version of your package.json every time before npm publish
-
+        1 update the version in package.json
+        2 git commit -a -s -m 'add' && git push origin main && npm login && npm publish
+        3 Finally, in your main project, yarn add axios-tools or npm i axios-tools
 
 
 
