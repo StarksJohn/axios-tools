@@ -106,18 +106,22 @@ interface axiosToolsProps {
 
 /**
  * use:
+ *      import { get,post } from 'axios-tools';
  *      import { tool } from 'starkfrontendtools';
+ *      const headers ={
+          Authorization: 'Bearer ' + `${sessionStorage.getItem('token') || ''}` // 让每个请求携带自定义token
+        }
  *      export const apiFunc = async (payload) => {
-              const [err, data] = await tool.to(get({ url: '', params: { }, baseURL: '', headers: '' }))
+              const [err, data] = await tool.to(get({ url: '', params: { }, baseURL: process.env.VUE_APP_BASEURLAPI, headers}))
               if (data && data.code === 0 && !err) {
                 return Promise.resolve(data)
               } else {
-                return Promise.reject(Error('))
+                return Promise.reject(Error(''))
               }
         }
  */
 const get = (props: axiosToolsProps) => {
-    const {url = '', params = {}, headers = {}, baseURL = ''} = props
+    const {url = '', params = {}/*url里?右边的参数*/, headers = {}, baseURL = ''/*接口根域名*/} = props
     console.log('axios-tools get url=', url)
     console.log('axios-tools get params=', params)
     console.log('axios-tools get headers=', headers)
@@ -125,7 +129,7 @@ const get = (props: axiosToolsProps) => {
 
     //After api.get() is executed, the callback of the handleRequestConfig method will be triggered
     return api.get(url, {
-        params: params,baseURL,
+        params: params, baseURL,
         headers,
         validateStatus: validateStatus
     })
@@ -138,8 +142,18 @@ const get = (props: axiosToolsProps) => {
 }
 
 /**
- * use: import { tool } from 'starkfrontendtools';
- *      const [err, data] = await tool.to(post({ url: '', params: { token: '' }, baseURL: '',   headers: {} }))
+ * use:
+ *      import { get,post } from 'axios-tools';
+ *      import { tool } from 'starkfrontendtools';
+ *      const headers ={
+          Authorization: 'Bearer ' + `${sessionStorage.getItem('token') || ''}` // 让每个请求携带自定义token
+        }
+ *      const [err, data] = await tool.to(post({ url: '', params: {  }, baseURL: process.env.VUE_APP_BASEURLAPI,headers}))
+ *      if (data && data.code === 0 && !err) {
+                return Promise.resolve(data)
+              } else {
+                return Promise.reject(Error(''))
+         }
  */
 const post = (props: axiosToolsProps) => {
     const {url = '', params = {}, headers = {}, baseURL = ''} = props
@@ -156,13 +170,13 @@ const post = (props: axiosToolsProps) => {
                 validateStatus: validateStatus, baseURL, headers
             }
         )
-        // .then((res) => {
-        //     return checkStatus(res)
-        // })
-        // .catch((error) => {
-        //     console.log('axios-tools post error=', error)
-        //     return Promise.reject(error)
-        // })
+    // .then((res) => {
+    //     return checkStatus(res)
+    // })
+    // .catch((error) => {
+    //     console.log('axios-tools post error=', error)
+    //     return Promise.reject(error)
+    // })
 }
 
 const handleResponseFail = (err: { response: { status: any }; message: string }) => {
@@ -268,5 +282,5 @@ const validateStatus = (status: number) => {
 // }
 
 export {
-    get, post,axiosToolsResponse
+    get, post, axiosToolsResponse
 }
