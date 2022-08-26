@@ -105,8 +105,16 @@ interface axiosToolsProps {
 }
 
 /**
- * use: import { tool } from 'starkfrontendtools';
- *      const [err, data] = await tool.to(get({ url: '', params: { token: '' }, baseURL: '',   headers: {} }))
+ * use:
+ *      import { tool } from 'starkfrontendtools';
+ *      export const apiFunc = async (payload) => {
+              const [err, data] = await tool.to(get({ url: '', params: { }, baseURL: '', headers: '' }))
+              if (data && data.code === 0 && !err) {
+                return Promise.resolve(data)
+              } else {
+                return Promise.reject(Error('))
+              }
+        }
  */
 const get = (props: axiosToolsProps) => {
     const {url = '', params = {}, headers = {}, baseURL = ''} = props
