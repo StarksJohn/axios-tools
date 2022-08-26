@@ -56,7 +56,7 @@ const handleRequestConfig = (config: AxiosRequestConfig) => {
 // @ts-ignore
 const handleResponseSuccess = (response: AxiosResponse/*{ data: axiosToolsResponse, status: number }*/) => {
     console.log('axios-tools handleResponseSuccess response=', response)
-    if (response.status !== 200) { // api request failed, based on actual situation
+    if (typeof response.data !== 'object'||response.status !== 200) { // api request failed, based on actual situation
         // eslint-disable-next-line prefer-promise-reject-errors
         return Promise.reject(response/*`axios-tools response.status !== 200 status=${response.status}`*/)// 接口Promise返回错误状态
     } else {
