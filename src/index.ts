@@ -67,6 +67,7 @@ const handleResponseFail = (err: { response: { status: any }; message: string })
     console.log('axios-tools handleResponseFail err=', err)
     console.log('axios-tools handleResponseFail typeof err=',(typeof err))
     console.log('axios-tools handleResponseFail stringify err=', JSON.stringify(err))
+    console.log('axios-tools handleResponseFail parse err=', JSON.parse(JSON.stringify(err)))
 
     if (err && axios.isCancel(err)) {
         // requestList.length = 0
