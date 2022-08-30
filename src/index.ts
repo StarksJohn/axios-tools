@@ -63,7 +63,6 @@ const handleResponseSuccess = (response: AxiosResponse/*{ data: axiosToolsRespon
         return Promise.resolve(response.data)
     }
 }
-
 const handleResponseFail = (err: { response: { status: any }; message: string }) => {
     console.log('axios-tools handleResponseFail err=', err)
     if (err && axios.isCancel(err)) {
