@@ -63,19 +63,19 @@ const handleResponseSuccess = (response: AxiosResponse/*{ data: axiosToolsRespon
         return Promise.resolve(response.data)
     }
 }
-const handleResponseFail = (err: { response: { status: any }; message: string }) => {
-    console.log('axios-tools handleResponseFail err=', err)
-    console.log('axios-tools handleResponseFail typeof err=',(typeof err))
-    console.log('axios-tools handleResponseFail stringify err=', JSON.stringify(err))
-    console.log('axios-tools handleResponseFail parse err=', JSON.parse(JSON.stringify(err)))
-
+const handleResponseFail = (_err: { response: { status: any }; message: string }) => {
+    // console.log('axios-tools handleResponseFail err=', err)
+    // console.log('axios-tools handleResponseFail typeof err=',(typeof err))
+    // console.log('axios-tools handleResponseFail stringify err=', JSON.stringify(err))
+    const err=JSON.parse(JSON.stringify(_err))
+    console.log('axios-tools handleResponseFail parse err=', err)
     if (err && axios.isCancel(err)) {
         // requestList.length = 0
         // store.dispatch('changeGlobalState', {loading: false})
         console.log('axios-tools throw axios.Cancel')
         throw new axios.Cancel('request.ts cancel api')
-    } else if (err && err.response) {
-        switch (err.response.status) {
+    } else /*if (err && err.response) */{
+        switch (err.status) {
             case 400:
                 err.message = 'Bad request'
                 break
@@ -115,9 +115,10 @@ const handleResponseFail = (err: { response: { status: any }; message: string })
             default:
                 err.message = `connection error : ${err.response.status}`
         }
-    } else {
-        err.message = 'Failed to connect to server'
     }
+    // else {
+    //     err.message = 'Failed to connect to server'
+    // }
     console.log('axios-tools handleResponseFail final err=', err)
     return Promise.reject(err)
 }
