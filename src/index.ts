@@ -65,6 +65,8 @@ const handleResponseSuccess = (response: AxiosResponse/*{ data: axiosToolsRespon
 }
 const handleResponseFail = (err: { response: { status: any }; message: string }) => {
     console.log('axios-tools handleResponseFail err=', err)
+    console.log('axios-tools handleResponseFail typeof err=',(typeof err))
+
     if (err && axios.isCancel(err)) {
         // requestList.length = 0
         // store.dispatch('changeGlobalState', {loading: false})
@@ -114,6 +116,7 @@ const handleResponseFail = (err: { response: { status: any }; message: string })
     } else {
         err.message = 'Failed to connect to server'
     }
+    console.log('axios-tools handleResponseFail final err=', err)
     return Promise.reject(err)
 }
 
