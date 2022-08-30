@@ -259,7 +259,8 @@ const handleResponseFail = (err: { response: { status: any }; message: string })
 const validateStatus = (status: number) => {
     console.log('axios-tools  validateStatus status=', status)
     // Only the return code of 2xx will be returned normally (resolve), and all non-2xx will be treated as exceptions (reject)
-    return status >= 200 && status < 300
+    // return status >= 200 && status < 300
+    return true
 }
 
 /**
