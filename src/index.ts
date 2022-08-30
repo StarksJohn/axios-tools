@@ -64,6 +64,60 @@ const handleResponseSuccess = (response: AxiosResponse/*{ data: axiosToolsRespon
     }
 }
 
+const handleResponseFail = (err: { response: { status: any }; message: string }) => {
+    console.log('axios-tools handleResponseFail err=', err)
+    if (err && axios.isCancel(err)) {
+        // requestList.length = 0
+        // store.dispatch('changeGlobalState', {loading: false})
+        console.log('axios-tools throw axios.Cancel')
+        throw new axios.Cancel('request.ts cancel api')
+    } else if (err && err.response) {
+        switch (err.response.status) {
+            case 400:
+                err.message = 'Bad request'
+                break
+            case 401:
+                err.message = 'Unauthorized, please log in again'
+                break
+            case 403:
+                err.message = 'access denied'
+                break
+            case 404:
+                err.message = 'Request error, the resource was not found'
+                break
+            case 405:
+                err.message = 'Request method not allowed'
+                break
+            case 408:
+                err.message = 'Request timed out'
+                break
+            case 500:
+                err.message = 'Server-side error'
+                break
+            case 501:
+                err.message = 'Network not implemented'
+                break
+            case 502:
+                err.message = 'Network Error'
+                break
+            case 503:
+                err.message = 'service is not available'
+                break
+            case 504:
+                err.message = 'network timeout'
+                break
+            case 505:
+                err.message = 'http version does not support the request'
+                break
+            default:
+                err.message = `connection error : ${err.response.status}`
+        }
+    } else {
+        err.message = 'Failed to connect to server'
+    }
+    return Promise.reject(err)
+}
+
 class Api {
     instance: AxiosInstance
 
@@ -179,60 +233,6 @@ const post = (props: axiosToolsProps) => {
     // })
 }
 
-const handleResponseFail = (err: { response: { status: any }; message: string }) => {
-    console.log('axios-tools handleResponseFail err=', err)
-    if (err && axios.isCancel(err)) {
-        // requestList.length = 0
-        // store.dispatch('changeGlobalState', {loading: false})
-        console.log('axios-tools throw axios.Cancel')
-        throw new axios.Cancel('request.ts cancel api')
-    } else if (err && err.response) {
-        switch (err.response.status) {
-            case 400:
-                err.message = 'Bad request'
-                break
-            case 401:
-                err.message = 'Unauthorized, please log in again'
-                break
-            case 403:
-                err.message = 'access denied'
-                break
-            case 404:
-                err.message = 'Request error, the resource was not found'
-                break
-            case 405:
-                err.message = 'Request method not allowed'
-                break
-            case 408:
-                err.message = 'Request timed out'
-                break
-            case 500:
-                err.message = 'Server-side error'
-                break
-            case 501:
-                err.message = 'Network not implemented'
-                break
-            case 502:
-                err.message = 'Network Error'
-                break
-            case 503:
-                err.message = 'service is not available'
-                break
-            case 504:
-                err.message = 'network timeout'
-                break
-            case 505:
-                err.message = 'http version does not support the request'
-                break
-            default:
-                err.message = `connection error : ${err.response.status}`
-        }
-    } else {
-        err.message = 'Failed to connect to server'
-    }
-    return Promise.reject(err)
-}
-
 /**
  * Call back after handleResponseSuccess is executed
  * @param response
@@ -259,8 +259,8 @@ const handleResponseFail = (err: { response: { status: any }; message: string })
 const validateStatus = (status: number) => {
     console.log('axios-tools  validateStatus status=', status)
     // Only the return code of 2xx will be returned normally (resolve), and all non-2xx will be treated as exceptions (reject)
-    // return status >= 200 && status < 300
-    return true
+    return status >= 200 && status < 300
+    // return true //保证 回调 handleResponseSuccess
 }
 
 /**
