@@ -206,8 +206,13 @@ const get = (props: axiosToolsProps) => {
  *      import { tool } from 'starkfrontendtools';
  *      const headers ={
           Authorization: 'Bearer ' + `${sessionStorage.getItem('token') || ''}` // 让每个请求携带自定义token
+          'Content-Type': 'multipart/form-data'//如果上传文件,加此参数
         }
- *      const [err, data] = await tool.to(post({ url: '', params: {  }, baseURL: process.env.VUE_APP_BASEURLAPI,headers}))
+        如果上传文件, params 被赋值为 formData
+                const formData = new FormData();
+                formData.append("file", '');
+ *      const [err, data] = await tool.to(post({ url: '', params: {  }, baseURL: process.env.VUE_APP_BASEURLAPI,
+ *                                      headers}))
  *      if (data && data.code === 0 && !err) {
                 return Promise.resolve(data)
               } else {
