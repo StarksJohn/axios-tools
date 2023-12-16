@@ -56,7 +56,7 @@ const handleRequestConfig = (config: AxiosRequestConfig) => {
 // @ts-ignore
 const handleResponseSuccess = (response: AxiosResponse/*{ data: axiosToolsResponse, status: number }*/) => {
     console.log('axios-tools handleResponseSuccess response=', response)
-    if (typeof response.data !== 'object'||response.status !== 200) { // api request failed, based on actual situation
+    if (typeof response.data !== 'object' || response.status !== 200) { // api request failed, based on actual situation
         // eslint-disable-next-line prefer-promise-reject-errors
         return Promise.reject(response/*`axios-tools response.status !== 200 status=${response.status}`*/)// 接口Promise返回错误状态
     } else {
@@ -67,7 +67,7 @@ const handleResponseFail = (_err: { response: { status: any }; message: string }
     // console.log('axios-tools handleResponseFail err=', err)
     // console.log('axios-tools handleResponseFail typeof err=',(typeof err))
     // console.log('axios-tools handleResponseFail stringify err=', JSON.stringify(err))
-    const err=JSON.parse(JSON.stringify(_err))
+    const err = JSON.parse(JSON.stringify(_err))
     console.log('axios-tools handleResponseFail parse err=', err)
     if (err && axios.isCancel(err)) {
         // requestList.length = 0
@@ -168,16 +168,16 @@ interface axiosToolsProps {
  *      import { get,post } from 'axios-tools';
  *      import { tool } from 'starkfrontendtools';
  *      const headers ={
-          Authorization: 'Bearer ' + `${sessionStorage.getItem('token') || ''}` // 让每个请求携带自定义token
-        }
+ Authorization: 'Bearer ' + `${sessionStorage.getItem('token') || ''}` // 让每个请求携带自定义token
+ }
  *      export const apiFunc = async (payload) => {
-              const [err, data] = await tool.to(get({ url: '', params: { }, baseURL: process.env.VUE_APP_BASEURLAPI, headers}))
-              if (data && data.code === 0 && !err) {
-                return Promise.resolve(data)
-              } else {
-                return Promise.reject(Error(''))
-              }
-        }
+ const [err, data] = await tool.to(get({ url: '', params: { }, baseURL: process.env.VUE_APP_BASEURLAPI, headers}))
+ if (data && data.code === 0 && !err) {
+ return Promise.resolve(data)
+ } else {
+ return Promise.reject(Error(''))
+ }
+ }
  */
 const get = (props: axiosToolsProps) => {
     const {url = '', params = {}/*url里?右边的参数*/, headers = {}, baseURL = ''/*接口根域名*/} = props
@@ -205,19 +205,19 @@ const get = (props: axiosToolsProps) => {
  *      import { get,post } from 'axios-tools';
  *      import { tool } from 'starkfrontendtools';
  *      const headers ={
-          Authorization: 'Bearer ' + `${sessionStorage.getItem('token') || ''}` // 让每个请求携带自定义token
-          'Content-Type': 'multipart/form-data'//如果上传文件,加此参数
-        }
-        如果上传文件, params 被赋值为 formData
-                const formData = new FormData();
-                formData.append("file", '');
+ Authorization: 'Bearer ' + `${sessionStorage.getItem('token') || ''}` // 让每个请求携带自定义token
+ 'Content-Type': 'multipart/form-data'//如果上传文件,加此参数
+ }
+ 如果上传文件, params 被赋值为 formData
+ const formData = new FormData();
+ formData.append("file", '');
  *      const [err, data] = await tool.to(post({ url: '', params: {  }, baseURL: process.env.VUE_APP_BASEURLAPI,
  *                                      headers}))
  *      if (data && data.code === 0 && !err) {
-                return Promise.resolve(data)
-              } else {
-                return Promise.reject(Error(''))
-         }
+ return Promise.resolve(data)
+ } else {
+ return Promise.reject(Error(''))
+ }
  */
 const post = (props: axiosToolsProps) => {
     const {url = '', params = {}, headers = {}, baseURL = ''} = props
@@ -241,6 +241,41 @@ const post = (props: axiosToolsProps) => {
     //     console.log('axios-tools post error=', error)
     //     return Promise.reject(error)
     // })
+}
+
+/**
+ * use:
+ import { get,post,put } from 'axios-tools';
+ import { tool } from 'starkfrontendtools';
+ const headers ={
+ Authorization: 'Bearer ' + `${sessionStorage.getItem('token') || ''}` // 让每个请求携带自定义token
+ 'Content-Type': 'multipart/form-data'//如果上传文件,加此参数
+ }
+ 如果上传文件, params 被赋值为 formData
+ const formData = new FormData();
+ formData.append("file", '');
+ const [err, data] = await tool.to(put({ url: '', params: {  }, baseURL: process.env.VUE_APP_BASEURLAPI,
+ headers}))
+ if (data && data.code === 0 && !err) {
+ return Promise.resolve(data)
+ } else {
+ return Promise.reject(Error(''))
+ }
+ */
+const put = (props: axiosToolsProps) => {
+    const {url = '', params = {}, headers = {}, baseURL = ''} = props
+    console.log('axios-tools put url=', url)
+    console.log('axios-tools put params=', params)
+    console.log('axios-tools put headers=', headers)
+    console.log('axios-tools put baseURL=', baseURL)
+    //After api.post() is executed, the callback of the handleRequestConfig method will be triggered
+    return api
+        .put(url, params,
+            {
+                // params, Do not add this parameter, otherwise a very long parameter will be added to the url of the Post request
+                validateStatus: validateStatus, baseURL, headers
+            }
+        )
 }
 
 /**
@@ -293,5 +328,5 @@ const validateStatus = (status: number) => {
 // }
 
 export {
-    get, post, axiosToolsResponse
+    get, post,put, axiosToolsResponse
 }

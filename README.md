@@ -13,7 +13,7 @@ Install:
 
 Usage:
 
-        import { get,post } from 'axios-tools';
+        import { get,post,put } from 'axios-tools';
 
 Push and Publish:
 
