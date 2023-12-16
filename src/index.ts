@@ -299,12 +299,12 @@ const put = (props: axiosToolsProps) => {
  return Promise.reject(Error(''))
  }
  */
-const delete = (props: axiosToolsProps) => {
+const axiosDelete = (props: axiosToolsProps) => {
     const {url = '', params = {}, headers = {}, baseURL = ''} = props
-    console.log('axios-tools delete url=', url)
-    console.log('axios-tools delete params=', params)
-    console.log('axios-tools delete headers=', headers)
-    console.log('axios-tools delete baseURL=', baseURL)
+    console.log('axios-tools axiosDelete url=', url)
+    console.log('axios-tools axiosDelete params=', params)
+    console.log('axios-tools axiosDelete headers=', headers)
+    console.log('axios-tools axiosDelete baseURL=', baseURL)
     return api({
         url: url,
         method: 'delete',
@@ -365,5 +365,5 @@ const validateStatus = (status: number) => {
 
 // @ts-ignore
 export {
-    get, post,put,delete, axiosToolsResponse
+    get, post,put,axiosDelete, axiosToolsResponse
 }
