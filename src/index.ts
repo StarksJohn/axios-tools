@@ -1,6 +1,8 @@
+// @ts-ignore
 import axios, {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios'
 // @ts-ignore
 import qs from 'qs'
+// @ts-ignore
 import cleanDeep from 'clean-deep'
 
 const defaultheaders = {
@@ -21,7 +23,6 @@ interface axiosToolsResponse {
 
 /**
  * Request interceptor
- * @param config: Pass as a parameter of api.get() | api.post() method
  */
 const handleRequestConfig = (config: AxiosRequestConfig) => {
     console.log('axios-tools handleRequestConfig config=', config)
@@ -33,7 +34,7 @@ const handleRequestConfig = (config: AxiosRequestConfig) => {
     })
     // const Config=config
     if (Config.method === 'get') {
-        Config.paramsSerializer = params => {
+        Config.paramsSerializer = (params: any) => {
             console.log('axios-tools paramsSerializer params=', params)
             // A querystring parsing and stringifying library with some added security.
             const qsStr = qs.stringify(params, {
@@ -139,10 +140,11 @@ class Api {
                  */
                 withCredentials: true,
                 headers: defaultheaders,
+                // @ts-ignore
                 ...baseConfig
             })
             // Request interceptor
-            this.instance.interceptors.request.use(handleRequestConfig, error => {
+            this.instance.interceptors.request.use(handleRequestConfig, (error: any) => {
                 // Do something with request error
                 console.log('axios-tools interceptors.request error=', error)
                 return Promise.reject(error)
