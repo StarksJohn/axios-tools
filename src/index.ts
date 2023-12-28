@@ -138,7 +138,7 @@ class Api {
                  * https://www.ruanyifeng.com/blog/2016/04/cors.html
                  * When the current request is a cross-domain type, whether to include cookies in the request, after the front-end sets   the true attribute, the back-end must be notified to allow it, otherwise the request will fail
                  */
-                withCredentials: true,
+                withCredentials: false,
                 headers: defaultheaders,
                 // @ts-ignore
                 ...baseConfig
